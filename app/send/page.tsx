@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import ConnectWallet from '@/components/ConnectWallet'
+import { usePhantom, AddressType } from '@phantom/react-sdk'
+import { PublicKey } from '@solana/web3.js'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -13,7 +14,12 @@ import { processFiatOnRamp } from '@/lib/jazzcash-mock'
 import QRCode from 'react-qr-code'
 
 export default function SendPage() {
-  const wallet = useWallet()
+  const { isConnected, addresses } = usePhantom()
+  const solanaAddress = addresses?.find(a => a.addressType === AddressType.solana)?.address
+  const wallet = {
+    connected: isConnected && !!solanaAddress,
+    publicKey: solanaAddress ? new PublicKey(solanaAddress) : null
+  }
   const [recipientAddress, setRecipientAddress] = useState('')
   const [amountUsdc, setAmountUsdc] = useState('')
   const [loading, setLoading] = useState(false)
@@ -90,7 +96,7 @@ export default function SendPage() {
           <span>Back</span>
         </Link>
         <h1 className="text-2xl font-bold text-blue-600">RemitX</h1>
-        <WalletMultiButton className="!bg-blue-600 hover:!bg-blue-700" />
+        <ConnectWallet />
       </nav>
 
       <div className="max-w-2xl mx-auto px-6 py-12">

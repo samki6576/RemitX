@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 //import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import WalletProvider from '@/components/wallet-provider'
+
 import PhantomProviderComponent from '@/components/PhantomProvider'
+import { ThemeProvider } from '@/components/theme-provider'
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
@@ -35,12 +36,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
- return (
+  return (
     <html lang="en">
       <body>
-        <PhantomProviderComponent>
-          {children}
-        </PhantomProviderComponent>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <PhantomProviderComponent>
+            {children}
+          </PhantomProviderComponent>
+        </ThemeProvider>
       </body>
     </html>
   );

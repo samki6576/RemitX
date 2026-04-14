@@ -1,28 +1,33 @@
 'use client';
 
-import { useModal, usePhantom } from "@phantom/react-sdk";
+import { useModal, usePhantom, useDisconnect, AddressType } from "@phantom/react-sdk";
+import { Button } from "@/components/ui/button";
 
 export default function ConnectWallet() {
   const { open } = useModal();
-  const { isConnected, user, disconnect } = usePhantom();
+  const { isConnected, addresses } = usePhantom();
+  const { disconnect } = useDisconnect();
 
-  if (isConnected && user) {
-    const solanaAddress = user.wallets.solana?.address;
+  if (isConnected && addresses && addresses.length > 0) {
+    const solanaAddress = addresses.find(a => a.addressType === AddressType.solana)?.address;
     return (
       <div className="flex items-center gap-4">
-        <div className="text-sm">
+        <div className="text-sm font-medium text-foreground">
           Connected: {solanaAddress?.slice(0, 6)}...{solanaAddress?.slice(-4)}
         </div>
-        <button onClick={disconnect} className="px-4 py-2 bg-red-500 text-white rounded">
+        <Button onClick={disconnect} variant="destructive" size="sm">
           Disconnect
-        </button>
+        </Button>
       </div>
     );
   }
 
   return (
-    <button onClick={open} className="px-6 py-3 bg-purple-600 text-white rounded-lg">
+    <Button 
+      onClick={open} 
+      className="bg-primary text-primary-foreground hover:bg-primary/90"
+    >
       Connect Phantom Wallet
-    </button>
+    </Button>
   );
 }

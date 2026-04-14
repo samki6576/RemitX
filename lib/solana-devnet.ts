@@ -8,7 +8,9 @@ import {
   Transaction,
   Keypair,
 } from "@solana/web3.js";
-import { WalletContextState } from "@solana/wallet-adapter-react";
+export interface MockWalletContext {
+  publicKey: PublicKey | null;
+}
 
 // FREE: Uses public devnet RPC (no API key needed)
 const DEVNET_RPC = "https://api.devnet.solana.com";
@@ -38,7 +40,7 @@ interface RemittanceData {
 }
 
 export async function createRemittance(
-  wallet: WalletContextState,
+  wallet: MockWalletContext,
   recipientAddress: string,
   amountUsdc: number
 ): Promise<string> {
@@ -60,7 +62,7 @@ export async function createRemittance(
 }
 
 export async function claimRemittance(
-  wallet: WalletContextState,
+  wallet: MockWalletContext,
   remittanceId: string
 ): Promise<string> {
   console.log("[v0] Claiming remittance on devnet...");
@@ -95,7 +97,7 @@ export async function trackRemittance(remittanceId: string): Promise<string> {
   return `https://explorer.solana.com/tx/${remittanceId}?cluster=devnet`;
 }
 
-export async function getWalletBalance(wallet: WalletContextState): Promise<number> {
+export async function getWalletBalance(wallet: MockWalletContext): Promise<number> {
   if (!wallet.publicKey) {
     return 0;
   }
