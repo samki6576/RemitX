@@ -51,38 +51,28 @@ export default function ClaimPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Navigation */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b">
-        <Link href="/" className="flex items-center gap-2 hover:opacity-70">
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back</span>
-        </Link>
-        <h1 className="text-2xl font-bold text-blue-600">RemitX</h1>
-        <ConnectWallet />
-      </nav>
-
-      <div className="max-w-2xl mx-auto px-6 py-12">
+    <main className="w-full relative z-10 pt-12 pb-24">
+      <div className="max-w-2xl mx-auto px-6">
         {!claimed ? (
-          <Card className="p-8">
-            <h2 className="text-2xl font-bold mb-6">Claim Remittance</h2>
+          <Card className="p-8 bg-card/60 backdrop-blur-xl border-border/40 shadow-2xl shadow-primary/5">
+            <h2 className="text-3xl font-extrabold mb-8 tracking-tight">Claim Remittance</h2>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <p className="text-sm text-blue-800">
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-5 mb-8">
+              <p className="text-sm text-primary font-medium">
                 💡 You receive a remittance ID from the sender. Enter it here to claim the USDC in your wallet.
               </p>
             </div>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                <p className="text-red-800">{error}</p>
+              <div className="mb-8 p-4 bg-destructive/10 border border-destructive/20 rounded-xl flex gap-3 animate-in fade-in slide-in-from-top-2">
+                <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+                <p className="text-destructive font-medium">{error}</p>
               </div>
             )}
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-semibold mb-2">
                   Remittance ID
                 </label>
                 <Input
@@ -90,15 +80,16 @@ export default function ClaimPage() {
                   value={remittanceId}
                   onChange={(e) => setRemittanceId(e.target.value)}
                   disabled={loading}
+                  className="h-12 bg-background/50 border-border/50 text-foreground"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-2">
                   The ID provided by the sender (usually starts with 'dev' on devnet)
                 </p>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg text-sm space-y-2">
-                <p className="font-medium">How to get your remittance ID:</p>
-                <ol className="list-decimal list-inside space-y-1 text-gray-600">
+              <div className="bg-background/40 border border-border/50 p-5 rounded-xl text-sm space-y-3">
+                <p className="font-bold text-foreground">How to get your remittance ID:</p>
+                <ol className="list-decimal list-inside space-y-2 text-muted-foreground font-medium">
                   <li>Ask the sender to send you the remittance ID</li>
                   <li>They can scan the QR code or copy the ID from the confirmation</li>
                   <li>Paste it above and click Claim</li>
@@ -109,14 +100,14 @@ export default function ClaimPage() {
                 onClick={handleClaim}
                 disabled={loading || !wallet.connected}
                 size="lg"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full h-14 text-lg bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg shadow-primary/25 rounded-xl"
               >
                 {loading ? 'Processing...' : wallet.connected ? 'Claim USDC' : 'Connect Wallet First'}
               </Button>
 
               {!wallet.connected && (
-                <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                  <p className="text-sm text-yellow-800">
+                <div className="text-center p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20">
+                  <p className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
                     👇 Please connect your Phantom wallet above
                   </p>
                 </div>
@@ -124,17 +115,24 @@ export default function ClaimPage() {
             </div>
           </Card>
         ) : (
-          <Card className="p-8 text-center">
-            <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Remittance Claimed!</h2>
-            <p className="text-gray-600 mb-6">
+          <Card className="p-10 text-center bg-card/60 backdrop-blur-xl border-border/40 shadow-2xl">
+            <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-10 h-10 text-green-500" />
+            </div>
+            <h2 className="text-3xl font-extrabold mb-2 text-foreground">Remittance Claimed!</h2>
+            <p className="text-muted-foreground mb-8 text-lg">
               {claimedAmount} USDC has been added to your wallet
             </p>
 
-            <div className="bg-green-50 p-4 rounded-lg mb-6 text-left text-sm">
-              <p><span className="font-medium">Remittance ID:</span> {remittanceId}</p>
-              <p className="mt-2"><span className="font-medium">Amount Received:</span> {claimedAmount} USDC</p>
-              <p className="mt-2"><span className="font-medium">Status:</span> <span className="text-green-600 font-semibold">Claimed</span></p>
+            <div className="bg-background/80 backdrop-blur-sm p-6 rounded-xl mb-8 border border-border/50 text-left shadow-sm">
+              <div className="text-sm space-y-3">
+                <p className="flex justify-between"><span className="text-muted-foreground font-medium">Remittance ID:</span> <span className="font-bold text-primary break-all">{remittanceId}</span></p>
+                <p className="flex justify-between"><span className="text-muted-foreground font-medium">Amount Received:</span> <span className="font-bold">{claimedAmount} USDC</span></p>
+                <div className="pt-3 border-t border-border/50 flex justify-between">
+                  <span className="text-muted-foreground font-medium">Status:</span>
+                  <span className="text-green-500 font-bold bg-green-500/10 px-3 py-1 rounded-full">Claimed</span>
+                </div>
+              </div>
             </div>
 
             <Button
@@ -142,13 +140,13 @@ export default function ClaimPage() {
                 setClaimed(false)
                 setRemittanceId('')
               }}
-              className="w-full bg-blue-600 hover:bg-blue-700"
+              className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white"
             >
               Claim Another
             </Button>
 
             <Link href="/" className="block mt-4">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full h-12 rounded-xl hover:bg-accent border-primary text-primary hover:text-primary transition-all">
                 Back to Home
               </Button>
             </Link>

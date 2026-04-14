@@ -88,33 +88,24 @@ export default function SendPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Navigation */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b">
-        <Link href="/" className="flex items-center gap-2 hover:opacity-70">
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back</span>
-        </Link>
-        <h1 className="text-2xl font-bold text-blue-600">RemitX</h1>
-        <ConnectWallet />
-      </nav>
+    <main className="w-full relative z-10 pt-12 pb-24">
+      <div className="max-w-2xl mx-auto px-6">
 
-      <div className="max-w-2xl mx-auto px-6 py-12">
         {!sent ? (
-          <Card className="p-8">
-            <h2 className="text-2xl font-bold mb-6">Send Money</h2>
+          <Card className="p-8 bg-card/60 backdrop-blur-xl border-border/40 shadow-2xl shadow-primary/5">
+            <h2 className="text-3xl font-extrabold mb-8 tracking-tight">Send Money</h2>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                <p className="text-red-800">{error}</p>
+              <div className="mb-8 p-4 bg-destructive/10 border border-destructive/20 rounded-xl flex gap-3 animate-in fade-in slide-in-from-top-2">
+                <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+                <p className="text-destructive font-medium">{error}</p>
               </div>
             )}
 
             <div className="space-y-6">
               {/* Recipient Address */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-semibold mb-2">
                   Recipient Wallet Address or Phone Number
                 </label>
                 <Input
@@ -122,18 +113,19 @@ export default function SendPage() {
                   value={recipientAddress}
                   onChange={(e) => setRecipientAddress(e.target.value)}
                   disabled={loading}
+                  className="h-12 bg-background/50 border-border/50 text-foreground"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-2">
                   Enter a Solana wallet address or phone number (for JazzCash integration)
                 </p>
               </div>
 
               {/* Amount */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-semibold mb-2">
                   Amount (USDC)
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <Input
                     type="number"
                     placeholder="50"
@@ -142,29 +134,31 @@ export default function SendPage() {
                     disabled={loading}
                     step="0.01"
                     min="0"
+                    className="h-12 bg-background/50 border-border/50"
                   />
                   <Button
                     variant="outline"
                     onClick={() => setShowFiatModal(true)}
                     disabled={!wallet.connected}
+                    className="h-12 px-6"
                   >
                     PKR →
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-2 text-primary font-medium">
                   FREE: Using devnet USDC. No real money.
                 </p>
               </div>
 
               {/* Fee Info */}
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm">Amount</span>
-                  <span className="font-semibold">{amountUsdc || '0'} USDC</span>
+              <div className="p-5 bg-primary/5 rounded-xl border border-primary/10">
+                <div className="flex justify-between mb-3 text-sm">
+                  <span className="text-muted-foreground">Amount</span>
+                  <span className="font-bold text-foreground">{amountUsdc || '0'} USDC</span>
                 </div>
-                <div className="flex justify-between pt-2 border-t border-blue-200">
-                  <span className="text-sm font-medium">Fee (1%)</span>
-                  <span className="font-semibold text-blue-600">
+                <div className="flex justify-between pt-3 border-t border-primary/10">
+                  <span className="text-sm font-semibold text-muted-foreground">Fee (1%)</span>
+                  <span className="font-bold text-primary">
                     {amountUsdc ? (parseFloat(amountUsdc) * 0.01).toFixed(2) : '0'} USDC
                   </span>
                 </div>
@@ -175,14 +169,14 @@ export default function SendPage() {
                 onClick={handleSend}
                 disabled={loading || !wallet.connected}
                 size="lg"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full h-14 text-lg bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg shadow-primary/25 rounded-xl"
               >
                 {loading ? 'Processing...' : wallet.connected ? 'Send Money' : 'Connect Wallet First'}
               </Button>
 
               {!wallet.connected && (
-                <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                  <p className="text-sm text-yellow-800">
+                <div className="text-center p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20">
+                  <p className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
                     👇 Please connect your Phantom wallet above
                   </p>
                 </div>
@@ -190,31 +184,36 @@ export default function SendPage() {
             </div>
           </Card>
         ) : (
-          <Card className="p-8 text-center">
-            <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Remittance Sent!</h2>
-            <p className="text-gray-600 mb-6">
-              Your money has been sent on Solana devnet
+          <Card className="p-10 text-center bg-card/60 backdrop-blur-xl border-border/40 shadow-2xl">
+            <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-10 h-10 text-green-500" />
+            </div>
+            <h2 className="text-3xl font-extrabold mb-2 text-foreground">Remittance Sent!</h2>
+            <p className="text-muted-foreground mb-8 text-lg">
+              Your money has been successfully processed
             </p>
 
-            <div className="bg-gray-50 p-4 rounded-lg mb-6 text-left">
-              <div className="text-sm space-y-2">
-                <p><span className="font-medium">To:</span> {recipientAddress}</p>
-                <p><span className="font-medium">Amount:</span> {amountUsdc} USDC</p>
-                <p><span className="font-medium">Fee:</span> {(parseFloat(amountUsdc) * 0.01).toFixed(2)} USDC</p>
-                <p><span className="font-medium">TX Hash:</span> <code className="text-xs bg-white p-1 rounded">{sentHash}</code></p>
+            <div className="bg-background/80 backdrop-blur-sm p-6 rounded-xl mb-8 border border-border/50 text-left shadow-sm">
+              <div className="text-sm space-y-3">
+                <p className="flex justify-between"><span className="text-muted-foreground font-medium">To:</span> <span className="font-bold">{recipientAddress}</span></p>
+                <p className="flex justify-between"><span className="text-muted-foreground font-medium">Amount:</span> <span className="font-bold">{amountUsdc} USDC</span></p>
+                <p className="flex justify-between"><span className="text-muted-foreground font-medium">Fee:</span> <span className="font-bold text-primary">{(parseFloat(amountUsdc) * 0.01).toFixed(2)} USDC</span></p>
+                <div className="pt-3 border-t border-border/50 break-all">
+                  <span className="text-muted-foreground font-medium block mb-1">TX Hash:</span>
+                  <code className="text-xs bg-muted p-2 rounded-md block text-primary">{sentHash}</code>
+                </div>
               </div>
             </div>
 
             {showQR ? (
-              <div className="mb-6">
-                <QRCode value={`RemitX:${sentHash}`} size={200} className="mx-auto" />
+              <div className="mb-8 p-6 bg-white rounded-xl inline-block shadow-sm">
+                <QRCode value={`RemitX:${sentHash}`} size={180} className="mx-auto" />
               </div>
             ) : (
               <Button
                 variant="outline"
                 onClick={() => setShowQR(true)}
-                className="w-full mb-4"
+                className="w-full mb-6 h-12 rounded-xl"
               >
                 Show QR Code
               </Button>
@@ -222,12 +221,12 @@ export default function SendPage() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <Link href={`https://explorer.solana.com/tx/${sentHash}?cluster=devnet`} target="_blank">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full h-12 rounded-xl hover:bg-accent">
                   View on Explorer
                 </Button>
               </Link>
               <Link href="/track">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full h-12 rounded-xl hover:bg-accent border-primary text-primary hover:text-primary">
                   Track Remittance
                 </Button>
               </Link>
@@ -240,7 +239,7 @@ export default function SendPage() {
                 setAmountUsdc('')
                 setSentHash('')
               }}
-              className="w-full mt-4 bg-blue-600 hover:bg-blue-700"
+              className="w-full mt-6 h-12 rounded-xl bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white"
             >
               Send Another
             </Button>
@@ -250,16 +249,16 @@ export default function SendPage() {
 
       {/* Fiat On-Ramp Modal */}
       {showFiatModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card className="p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold mb-4">Convert PKR to USDC</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              FREE: This is a mock fiat on-ramp. No real money will be charged.
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-in fade-in duration-200">
+          <Card className="p-8 w-full max-w-md bg-card border-border/40 shadow-2xl relative">
+            <h3 className="text-2xl font-bold mb-2">Convert PKR to USDC</h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              FREE: Mock fiat on-ramp. No real money will be charged.
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-semibold mb-2">
                   Amount in PKR
                 </label>
                 <Input
@@ -267,32 +266,34 @@ export default function SendPage() {
                   placeholder="13,850 (≈ 50 USDC)"
                   value={fiatAmount}
                   onChange={(e) => setFiatAmount(e.target.value)}
+                  className="h-12 bg-background/50 border-border/50"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-2">
                   Rate: 1 USDC ≈ 277 PKR
                 </p>
               </div>
 
-              <div className="bg-blue-50 p-3 rounded">
-                <p className="text-xs text-blue-800">
-                  You will receive: {fiatAmount ? (parseFloat(fiatAmount) / 277).toFixed(2) : '0'} USDC
+              <div className="bg-primary/5 border border-primary/10 p-4 rounded-xl">
+                <p className="text-sm font-medium text-primary flex justify-between">
+                  <span>You will receive:</span>
+                  <span className="font-bold">{fiatAmount ? (parseFloat(fiatAmount) / 277).toFixed(2) : '0'} USDC</span>
                 </p>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-3 pt-2">
                 <Button
                   variant="outline"
                   onClick={() => setShowFiatModal(false)}
-                  className="flex-1"
+                  className="flex-1 h-12 rounded-xl"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleFiatOnRamp}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  className="flex-1 h-12 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white"
                   disabled={loading}
                 >
-                  {loading ? 'Converting...' : 'Convert to USDC'}
+                  {loading ? 'Converting...' : 'Swap for USDC'}
                 </Button>
               </div>
             </div>
