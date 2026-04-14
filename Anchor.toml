@@ -1,0 +1,18 @@
+[build]
+reads_version = "0.1.0"
+repository = ""
+anchor_version = "0.29.0"
+solc_version = "0.8.4"
+
+[provider]
+cluster = "devnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "anchor test"
+
+[programs.devnet]
+remittance = "YourProgramIdHere"
+
+[registry]
+url = "https://api.apr.dev"
